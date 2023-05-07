@@ -3,12 +3,17 @@ from rake_nltk import Rake
 import os
 import argparse
 import glob
+from typing import List
+
 
 # Load the English language model
 nlp = spacy.load('en_core_web_sm')
 
 # Function to extract keywords from the text
-def extract_keywords_from_text(text, num_keywords=10):
+def extract_keywords_from_text(text, num_keywords=10)->List[str]:
+    """
+    Extract top N entities from the input text.
+    """
     doc = nlp(text)
 
     # Named Entity Recognition
@@ -36,7 +41,12 @@ def extract_keywords_from_text(text, num_keywords=10):
 
     return unique_keywords[:num_keywords]
 
+
 def process_text_file(input_file, num_keywords=10, output_file=None):
+    """
+    Read text from the input file; Extract top N entities from the text; Save the entities into an output file.
+    If output_file is not specified, the default output file name is the same a input_file, but with a file extension `.keywords`.
+    """
     # Read the input file
     with open(input_file, 'r', encoding='utf-8') as f:
         text = f.read()
@@ -57,6 +67,9 @@ def process_text_file(input_file, num_keywords=10, output_file=None):
 
 
 def process_input_path(input_path, num_keywords=10):
+    """
+    Identify all files matching the input path pattern. For each matched file, extract entities from the file.
+    """
     # Get all matching files in the input path
     matching_files = glob.glob(input_path)
 
